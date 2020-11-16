@@ -1,4 +1,6 @@
-# Inception
+# Tower Troops Project
+
+![Go](https://github.com/duykhoa/tower_troops/workflows/Go/badge.svg)
 
 The tower and troops are protecting villagers
 
