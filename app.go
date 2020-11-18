@@ -1,25 +1,15 @@
 package main
 
 import (
-  "net/http"
-  "time"
-
-  "github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
+	"tower_troops/controllers"
 )
 
-func setupRoute(r *gin.Engine) *gin.Engine {
-  routerGroup := r.Group("/v1")
-
-  routerGroup.GET("/", func(c *gin.Context) {
-    c.JSON(http.StatusOK, gin.H{"msg": "OK", "timestamp": time.Now().Unix()})
-  })
-
-  return r
-}
+const PORT = ":8080"
 
 func main() {
-  //gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.ReleaseMode)
 
-  r := gin.Default()
-  setupRoute(r).Run(":8080")
+	r := gin.Default()
+	controllers.SetupRoute(r).Run(PORT)
 }
