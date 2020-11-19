@@ -33,6 +33,11 @@ func CreateDefaultTower() *Tower {
 }
 
 func (tower *Tower) Serialize() *TowerSerializer {
+  var missleSerializers = make([]*MissleSerializer, len(tower.Missles))
+  for idx, m:= range(tower.Missles) {
+    missleSerializers[idx] = m.Serialize()
+  }
+
   return &TowerSerializer{
     HPLevel: tower.HPLevel,
     HP: tower.HP(),
@@ -40,7 +45,7 @@ func (tower *Tower) Serialize() *TowerSerializer {
     Armor: tower.Armor(),
     Troops: tower.Troops,
     Golds: tower.Golds,
-    Missles: tower.Missles,
+    Missles: missleSerializers,
   }
 }
 

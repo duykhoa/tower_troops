@@ -2,6 +2,7 @@ package models
 
 type Missle struct {
   Cost int
+  Name string
   DamageLevel int
   RangeLevel int
   Tower *Tower
@@ -13,6 +14,7 @@ type Missle struct {
 
 var WoodenArcherMissle = &Missle{
   Cost: 80,
+  Name: "WoodenArcherMissle",
   AttackSpeedLevel: 0,
   DamageLevel: 0,
   RangeLevel: 0,
@@ -126,4 +128,16 @@ func (missle *Missle) UpgradeAttackSpeed() bool {
   }
 
   return false
+}
+
+func (missle *Missle) Serialize() *MissleSerializer {
+  return &MissleSerializer{
+    Damage: missle.Damage(),
+    DamageLevel: missle.DamageLevel,
+    Range: missle.Range(),
+    RangeLevel: missle.RangeLevel,
+    AttackSpeed: missle.AttackSpeed(),
+    AttackSpeedLevel: missle.AttackSpeedLevel,
+    Name: missle.Name,
+  }
 }
