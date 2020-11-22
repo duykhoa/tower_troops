@@ -10,9 +10,11 @@ import (
 )
 
 type Config struct {
+  PORT string
   DB *gorm.DB
 }
 
+const DEFAULT_PORT string = ":8080"
 var C *Config
 
 func Load() {
@@ -33,7 +35,13 @@ func Load() {
     panic("Connect Database failed")
   }
 
+  var port string
+  if port = os.Getenv("PORT"); len(port) <= 0 {
+    port = DEFAULT_PORT
+  }
+
   C = &Config{
     DB: db,
+    PORT: port,
   }
 }

@@ -115,6 +115,7 @@ var Migrations = []Migration {
         ArmorLevel int           `gorm:"not null"`
         Troops []Troop           `gorm:"not null"`
         Golds int                `gorm:"not null"`
+        UserID uint
         Missles []Missle
       }
 

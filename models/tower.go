@@ -10,6 +10,7 @@ type Tower struct {
   Troops []Troop                           `json:"troops"`
   Golds int                                `json:"golds"`
   Missles []Missle                         `json:"missles"`
+  UserID uint
   UpgradeHPScheme  map[int]UpgradeValue    `json:"-" gorm:"-"`
   UpgradeArmorScheme  map[int]UpgradeValue `json:"-" gorm:"-"`
 }

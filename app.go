@@ -7,16 +7,7 @@ import (
   "tower_troops/migrations"
 
   "github.com/gin-gonic/gin"
-  "gorm.io/gorm"
 )
-
-const PORT = ":8080"
-
-type User struct {
-  gorm.Model
-  ID int `gorm:"primaryKey"`
-  email string
-}
 
 func main() {
   config.Load()
@@ -30,6 +21,6 @@ func main() {
   } else {
     gin.SetMode(gin.ReleaseMode)
     r := gin.Default()
-    controllers.SetupRoute(r).Run(PORT)
+    controllers.SetupRoute(r).Run(config.C.PORT)
   }
 }
