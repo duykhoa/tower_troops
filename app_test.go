@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -21,8 +20,6 @@ func TestPing(t *testing.T) {
 
 func TestCreateTowerAPI(t *testing.T) {
 	w := proccessRequest(http.MethodPost, "/towers", nil, controllers.SetupRoute)
-
-	fmt.Println(w.Body.String())
 
 	assert.Equal(t, http.StatusCreated, w.Code)
 }
