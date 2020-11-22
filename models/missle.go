@@ -1,15 +1,20 @@
 package models
 
+import "gorm.io/gorm"
+
 type Missle struct {
+  gorm.Model
+
+  TowerID uint
   Cost int
   Name string
   DamageLevel int
   RangeLevel int
   Tower *Tower
   AttackSpeedLevel int
-  UpgradeDamageLevelScheme map[int]UpgradeValue
-  UpgradeRangeLevelScheme map[int]UpgradeValue
-  UpgradeAttackSpeedLevelScheme map[int]UpgradeValue
+  UpgradeDamageLevelScheme map[int]UpgradeValue      `json:"-" gorm:"-"`
+  UpgradeRangeLevelScheme map[int]UpgradeValue       `json:"-" gorm:"-"`
+  UpgradeAttackSpeedLevelScheme map[int]UpgradeValue `json:"-" gorm:"-"`
 }
 
 var WoodenArcherMissle = &Missle{

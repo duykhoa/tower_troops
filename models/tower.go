@@ -1,13 +1,17 @@
 package models
 
+import "gorm.io/gorm"
+
 type Tower struct {
+  gorm.Model
+
   HPLevel int                              `json:"-"`
   ArmorLevel int                           `json:"-"`
   Troops []Troop                           `json:"troops"`
   Golds int                                `json:"golds"`
   Missles []Missle                         `json:"missles"`
-  UpgradeHPScheme  map[int]UpgradeValue    `json:"-"`
-  UpgradeArmorScheme  map[int]UpgradeValue `json:"-"`
+  UpgradeHPScheme  map[int]UpgradeValue    `json:"-" gorm:"-"`
+  UpgradeArmorScheme  map[int]UpgradeValue `json:"-" gorm:"-"`
 }
 
 func CreateDefaultTower() *Tower {
