@@ -18,7 +18,13 @@ const DEFAULT_PORT string = ":8080"
 var C *Config
 
 func Load() {
-  godotenv.Load()
+  app_env := os.Getenv("app_env")
+
+  if app_env == "test" {
+    godotenv.Load("../.env.test")
+  } else {
+    godotenv.Load()
+  }
 
   dsn := fmt.Sprintf(
     "host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
