@@ -1,3 +1,6 @@
 .git
 .allmark
 tower_troops
+
+.env
+.env.test

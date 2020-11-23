@@ -6,6 +6,21 @@ on:
   pull_request:
     branches: [ master ]
 
+services:
+  postgresql:
+    image: postgres:12-alpine
+    env:
+      POSTGRES_PASSWORD: supersecret
+      POSTGRES_USER: postgres
+      POSTGRES_DB: tower_troops_test
+    options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    ports:
+      - 5432:5432
+
 jobs:
 
   build:
@@ -28,9 +43,11 @@ jobs:
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
             dep ensure
         fi
+    - name: Rename .env.ci to .env.test
+      run: mv .env.ci .env.test
 
     - name: Build
       run: go build -v .
 
     - name: Test
-      run: go test -v .
+      run: go test -v ./...
