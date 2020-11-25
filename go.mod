@@ -26,4 +26,5 @@ require (
 	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776 // indirect
 	gorm.io/driver/postgres v1.0.5
 	gorm.io/gorm v1.20.7
+	gotest.tools v2.2.0+incompatible
 )

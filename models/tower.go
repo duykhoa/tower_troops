@@ -2,18 +2,37 @@ package models
 
 import "gorm.io/gorm"
 
+type TowerUpgradeTemplate struct {
+  HP map[int]UpgradeValue     `json:"-" gorm:"-"`
+  Armor map[int]UpgradeValue  `json:"-" gorm:"-"`
+}
+
 type Tower struct {
   gorm.Model
 
-  HPLevel int                              `json:"-"`
-  ArmorLevel int                           `json:"-"`
-  Troops []Troop                           `json:"troops"`
-  Golds int                                `json:"golds"`
-  Missles []Missle                         `json:"missles"`
-  UserID uint                              `json:"-"`
-  User User                                `json:"-"`
-  UpgradeHPScheme map[int]UpgradeValue     `json:"-" gorm:"-"`
-  UpgradeArmorScheme map[int]UpgradeValue  `json:"-" gorm:"-"`
+  HPLevel int                         `json:"-"`
+  ArmorLevel int                      `json:"-"`
+  Troops []Troop                      `json:"troops"`
+  Golds int                           `json:"golds"`
+  Missles []Missle                    `json:"missles"`
+  UserID uint                         `json:"-"`
+  User *User                           `json:"-"`
+  UpgradeScheme *TowerUpgradeTemplate `json:"-" gorm:"-"`
+}
+
+var TowerTemplateDefault = &TowerUpgradeTemplate {
+    HP: map[int]UpgradeValue {
+      0: { Value: 100, Cost: 0 },
+      1: { Value: 150, Cost: 100 },
+      2: { Value: 200, Cost: 200 },
+      3: { Value: 250, Cost: 300 },
+    },
+    Armor: map[int]UpgradeValue {
+      0: { Value: 5, Cost: 0 },
+      1: { Value: 7, Cost: 100 },
+      2: { Value: 9, Cost: 100 },
+      3: { Value: 11, Cost: 200 },
+    },
 }
 
 func CreateDefaultTower() *Tower {
@@ -23,18 +42,7 @@ func CreateDefaultTower() *Tower {
     Troops: make([]Troop, 0),
     Golds: 100,
     Missles: make([]Missle, 0),
-    UpgradeHPScheme: map[int]UpgradeValue {
-      0: { Value: 100, Cost: 0 },
-      1: { Value: 150, Cost: 100 },
-      2: { Value: 200, Cost: 200 },
-      3: { Value: 250, Cost: 300 },
-    },
-    UpgradeArmorScheme: map[int]UpgradeValue {
-      0: { Value: 5, Cost: 0 },
-      1: { Value: 7, Cost: 100 },
-      2: { Value: 9, Cost: 100 },
-      3: { Value: 11, Cost: 200 },
-    },
+    UpgradeScheme: TowerTemplateDefault,
   }
 }
 
@@ -56,18 +64,18 @@ func (tower *Tower) Serialize() *TowerSerializer {
 }
 
 func (tower *Tower) MaxArmorLevel() int {
-  return len(tower.UpgradeArmorScheme)
+  return len(tower.UpgradeScheme.Armor)
 }
 
 func (tower *Tower) MaxHPLevel() int {
-  return len(tower.UpgradeArmorScheme)
+  return len(tower.UpgradeScheme.Armor)
 }
 
 func (tower *Tower) UpgradeArmor() bool {
   upgradeLevel := tower.ArmorLevel + 1
 
   if (upgradeLevel < tower.MaxArmorLevel()) {
-    var Value = tower.UpgradeArmorScheme[upgradeLevel]
+    var Value = tower.UpgradeScheme.Armor[upgradeLevel]
 
     if (Value.Cost <= tower.Golds) {
       tower.Golds -= Value.Cost
@@ -84,7 +92,7 @@ func (tower *Tower) UpgradeHP() bool {
   upgradeLevel := tower.HPLevel + 1
 
   if (upgradeLevel < tower.MaxHPLevel()) {
-    var Value = tower.UpgradeHPScheme[upgradeLevel]
+    var Value = tower.UpgradeScheme.HP[upgradeLevel]
 
     if (Value.Cost <= tower.Golds) {
       tower.Golds -= Value.Cost
@@ -98,11 +106,11 @@ func (tower *Tower) UpgradeHP() bool {
 }
 
 func (tower *Tower) HP() int {
-  return tower.UpgradeHPScheme[tower.HPLevel].Value
+  return tower.UpgradeScheme.HP[tower.HPLevel].Value
 }
 
 func (tower *Tower) Armor() int {
-  return tower.UpgradeArmorScheme[tower.ArmorLevel].Value
+  return tower.UpgradeScheme.Armor[tower.ArmorLevel].Value
 }
 
 func(tower *Tower) BuyMissle(missle *Missle) {

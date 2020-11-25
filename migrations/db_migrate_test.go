@@ -152,5 +152,9 @@ func (s *Suite) TestRollBack() {
 }
 
 func TestSuite(t *testing.T) {
-  suite.Run(t, new(Suite))
+  _, includeIntegrationTest := os.LookupEnv("RUN_INTEGRATION_TEST")
+
+  if (includeIntegrationTest) {
+    suite.Run(t, new(Suite))
+  }
 }
