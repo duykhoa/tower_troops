@@ -89,7 +89,7 @@ func TowersBuyMissleHPHandler(c *gin.Context) {
 
   switch strings.ToLower(req.Name) {
   case "wood":
-    tower.BuyMissle(models.WoodenArcherMissle)
+    tower.BuyMissle(models.WoodenArcherMissleTemplate)
   default:
     c.JSON(http.StatusBadRequest, gin.H{"error": "No error with name " + req.Name})
   }

@@ -14,7 +14,7 @@ type Tower struct {
   ArmorLevel int                      `json:"-"`
   Troops []Troop                      `json:"troops"`
   Golds int                           `json:"golds"`
-  Missles []Missle                    `json:"missles"`
+  Missles []*Missle                    `json:"missles"`
   UserID uint                         `json:"-"`
   User *User                           `json:"-"`
   UpgradeScheme *TowerUpgradeTemplate `json:"-" gorm:"-"`
@@ -41,7 +41,7 @@ func CreateDefaultTower() *Tower {
     ArmorLevel: 0,
     Troops: make([]Troop, 0),
     Golds: 100,
-    Missles: make([]Missle, 0),
+    Missles: make([]*Missle, 0),
     UpgradeScheme: TowerTemplateDefault,
   }
 }
@@ -113,12 +113,12 @@ func (tower *Tower) Armor() int {
   return tower.UpgradeScheme.Armor[tower.ArmorLevel].Value
 }
 
-func(tower *Tower) BuyMissle(missle *Missle) {
-  if (missle.Cost <= tower.Golds) {
-    cloneTower := *missle.Clone()
-    cloneTower.SetTower(tower)
+func(tower *Tower) BuyMissle(missleTemplate *MissleTemplate) {
+  if (missleTemplate.Cost <= tower.Golds) {
+    missle := CreateMissleFromTemplate(missleTemplate)
+    missle.SetTower(tower)
 
-    tower.Missles = append(tower.Missles, cloneTower)
-    tower.Golds -= missle.Cost
+    tower.Missles = append(tower.Missles, missle)
+    tower.Golds -= missleTemplate.Cost
   }
 }

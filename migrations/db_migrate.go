@@ -1,10 +1,10 @@
 package migrations
 
 import (
-  "errors"
-  "tower_troops/config"
+	"errors"
+	"tower_troops/config"
 
-  "gorm.io/gorm"
+	"gorm.io/gorm"
 )
 
 type DBSchemaVersion struct {
@@ -45,6 +45,7 @@ func DBMigrate() {
   if (!migrator.HasTable(&DBSchemaVersion{})) {
     config.C.DB.Migrator().CreateTable(&DBSchemaVersion{})
   }
+
   var newerDBVersionNumber int
   var currentDBVersionNumber int = GetCurrentDBVersion()
 
@@ -117,7 +118,7 @@ var Migrations = []Migration {
         Golds int                `gorm:"not null"`
         UserID uint              `gorm:"not null"`
         User User
-        Missles []Missle
+        Missles []*Missle
       }
 
       return db.AutoMigrate(&User{}, &Tower{}, &Troop{}, &Missle{})

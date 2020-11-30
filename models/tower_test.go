@@ -38,7 +38,7 @@ func TestUpgradeTowerHPWithNotEnoughGold(t *testing.T) {
 func TestBuyMissle(t *testing.T) {
   tower := CreateDefaultTower()
 
-  tower.BuyMissle(WoodenArcherMissle)
+  tower.BuyMissle(WoodenArcherMissleTemplate)
 
   assert.Len(t, tower.Missles, 1)
 }
@@ -47,14 +47,24 @@ func TestBuyMissleWithNotEnoughGold(t *testing.T) {
   tower := CreateDefaultTower()
   tower.Golds = 100
 
-  var customMissle = &Missle{
+  var customMissleTemplate = &MissleTemplate{
     Cost: 200,
+    Name: "Custom Missle",
     DamageLevel: 1,
     RangeLevel: 1,
     AttackSpeedLevel: 1,
+    UpgradeDamageLevelScheme: map[int]UpgradeValue {
+      0: {},
+    },
+    UpgradeRangeLevelScheme: map[int]UpgradeValue {
+      0: {},
+    },
+    UpgradeAttackSpeedLevelScheme: map[int]UpgradeValue {
+      0: {},
+    },
   }
 
-  tower.BuyMissle(customMissle)
+  tower.BuyMissle(customMissleTemplate)
 
   assert.Empty(t, tower.Missles)
   assert.Equal(t, 100, tower.Golds)

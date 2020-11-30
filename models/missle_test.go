@@ -8,7 +8,7 @@ import (
 
 func TestUpgradeRange(t *testing.T) {
   tower := CreateDefaultTower()
-  missle := WoodenArcherMissle.Clone().SetTower(tower)
+  missle := CreateMissleFromTemplate(WoodenArcherMissleTemplate).SetTower(tower)
 
   result := missle.UpgradeRange()
 
@@ -19,7 +19,7 @@ func TestUpgradeRange(t *testing.T) {
 func TestUpgradeRangeWithNotEnoughGolds(t *testing.T) {
   tower := CreateDefaultTower()
   tower.Golds = 69
-  missle := WoodenArcherMissle.Clone().SetTower(tower)
+  missle := CreateMissleFromTemplate(WoodenArcherMissleTemplate).SetTower(tower)
 
   result := missle.UpgradeRange()
 
@@ -28,8 +28,7 @@ func TestUpgradeRangeWithNotEnoughGolds(t *testing.T) {
 }
 
 func TestUpgradeRange_WhenNoTowerAttachedTo(t *testing.T) {
-  missle := WoodenArcherMissle.Clone()
-
+  missle := CreateMissleFromTemplate(WoodenArcherMissleTemplate)
   result := missle.UpgradeRange()
 
   assert.False(t, result)
@@ -38,7 +37,7 @@ func TestUpgradeRange_WhenNoTowerAttachedTo(t *testing.T) {
 
 func TestUpgradeDamage(t *testing.T) {
   tower := CreateDefaultTower()
-  missle := WoodenArcherMissle.Clone().SetTower(tower)
+  missle := CreateMissleFromTemplate(WoodenArcherMissleTemplate).SetTower(tower)
 
   result := missle.UpgradeDamage()
 
@@ -49,7 +48,7 @@ func TestUpgradeDamage(t *testing.T) {
 func TestUpgradeDamageWithNotEnoughGolds(t *testing.T) {
   tower := CreateDefaultTower()
   tower.Golds = 69
-  missle := WoodenArcherMissle.Clone().SetTower(tower)
+  missle := CreateMissleFromTemplate(WoodenArcherMissleTemplate).SetTower(tower)
 
   result := missle.UpgradeDamage()
 
@@ -58,7 +57,7 @@ func TestUpgradeDamageWithNotEnoughGolds(t *testing.T) {
 }
 
 func TestUpgradeDamage_WhenNoTowerAttachedTo(t *testing.T) {
-  missle := WoodenArcherMissle.Clone()
+  missle := CreateMissleFromTemplate(WoodenArcherMissleTemplate)
 
   result := missle.UpgradeDamage()
 
@@ -68,7 +67,7 @@ func TestUpgradeDamage_WhenNoTowerAttachedTo(t *testing.T) {
 
 func TestUpgradeAttackSpeed(t *testing.T) {
   tower := CreateDefaultTower()
-  missle := WoodenArcherMissle.Clone().SetTower(tower)
+  missle := CreateMissleFromTemplate(WoodenArcherMissleTemplate).SetTower(tower)
 
   result := missle.UpgradeAttackSpeed()
 
@@ -79,7 +78,7 @@ func TestUpgradeAttackSpeed(t *testing.T) {
 func TestUpgradeAttackSpeedWithNotEnoughGolds(t *testing.T) {
   tower := CreateDefaultTower()
   tower.Golds = 49
-  missle := WoodenArcherMissle.Clone().SetTower(tower)
+  missle := CreateMissleFromTemplate(WoodenArcherMissleTemplate).SetTower(tower)
 
   result := missle.UpgradeAttackSpeed()
 
@@ -88,7 +87,7 @@ func TestUpgradeAttackSpeedWithNotEnoughGolds(t *testing.T) {
 }
 
 func TestUpgradeAttackSpeed_WhenNoTowerAttachedTo(t *testing.T) {
-  missle := WoodenArcherMissle.Clone()
+  missle := CreateMissleFromTemplate(WoodenArcherMissleTemplate)
 
   result := missle.UpgradeAttackSpeed()
 

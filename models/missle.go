@@ -12,12 +12,21 @@ type Missle struct {
   RangeLevel int
   Tower *Tower
   AttackSpeedLevel int
-  UpgradeDamageLevelScheme map[int]UpgradeValue      `json:"-" gorm:"-"`
-  UpgradeRangeLevelScheme map[int]UpgradeValue       `json:"-" gorm:"-"`
-  UpgradeAttackSpeedLevelScheme map[int]UpgradeValue `json:"-" gorm:"-"`
+  MissleTemplate *MissleTemplate `json:"-" gorm:"-"`
 }
 
-var WoodenArcherMissle = &Missle{
+type MissleTemplate struct {
+  Cost int
+  Name string
+  DamageLevel int
+  RangeLevel int
+  AttackSpeedLevel int
+  UpgradeDamageLevelScheme map[int]UpgradeValue
+  UpgradeRangeLevelScheme map[int]UpgradeValue
+  UpgradeAttackSpeedLevelScheme map[int]UpgradeValue
+}
+
+var WoodenArcherMissleTemplate = &MissleTemplate{
   Cost: 80,
   Name: "WoodenArcherMissle",
   AttackSpeedLevel: 0,
@@ -43,15 +52,13 @@ var WoodenArcherMissle = &Missle{
   },
 }
 
-func (missle *Missle) Clone() *Missle {
+func CreateMissleFromTemplate(missleTemplate *MissleTemplate) *Missle {
   return &Missle{
-    Cost: missle.Cost,
-    DamageLevel: missle.DamageLevel,
-    RangeLevel: missle.RangeLevel,
-    AttackSpeedLevel: missle.AttackSpeedLevel,
-    UpgradeDamageLevelScheme: missle.UpgradeDamageLevelScheme,
-    UpgradeRangeLevelScheme: missle.UpgradeRangeLevelScheme,
-    UpgradeAttackSpeedLevelScheme: missle.UpgradeDamageLevelScheme,
+    Cost: missleTemplate.Cost,
+    DamageLevel: missleTemplate.DamageLevel,
+    RangeLevel: missleTemplate.RangeLevel,
+    AttackSpeedLevel: missleTemplate.AttackSpeedLevel,
+    MissleTemplate: missleTemplate,
   }
 }
 
@@ -61,34 +68,34 @@ func (missle *Missle) SetTower(tower *Tower) *Missle {
 }
 
 func (missle *Missle) MaxRangeLevel() int {
-  return len(missle.UpgradeRangeLevelScheme)
+  return len(missle.MissleTemplate.UpgradeRangeLevelScheme)
 }
 
 func (missle *Missle) MaxDamageLevel() int {
-  return len(missle.UpgradeDamageLevelScheme)
+  return len(missle.MissleTemplate.UpgradeDamageLevelScheme)
 }
 
 func (missle *Missle) MaxAttackSpeedLevel() int {
-  return len(missle.UpgradeAttackSpeedLevelScheme)
+  return len(missle.MissleTemplate.UpgradeAttackSpeedLevelScheme)
 }
 
 func (missle *Missle) Range() int {
-  return missle.UpgradeRangeLevelScheme[missle.RangeLevel].Value
+  return missle.MissleTemplate.UpgradeRangeLevelScheme[missle.RangeLevel].Value
 }
 
 func (missle *Missle) Damage() int {
-  return missle.UpgradeDamageLevelScheme[missle.DamageLevel].Value
+  return missle.MissleTemplate.UpgradeDamageLevelScheme[missle.DamageLevel].Value
 }
 
 func (missle *Missle) AttackSpeed() int {
-  return missle.UpgradeAttackSpeedLevelScheme[missle.AttackSpeedLevel].Value
+  return missle.MissleTemplate.UpgradeAttackSpeedLevelScheme[missle.AttackSpeedLevel].Value
 }
 
 func (missle *Missle) UpgradeRange() bool {
   upgradeLevel := missle.RangeLevel + 1
 
   if (upgradeLevel < missle.MaxRangeLevel() && missle.Tower != nil) {
-    var Value = missle.UpgradeRangeLevelScheme[upgradeLevel]
+    var Value = missle.MissleTemplate.UpgradeRangeLevelScheme[upgradeLevel]
 
     if (Value.Cost <= missle.Tower.Golds) {
       missle.Tower.Golds -= Value.Cost
@@ -105,7 +112,7 @@ func (missle *Missle) UpgradeDamage() bool {
   upgradeLevel := missle.DamageLevel + 1
 
   if (upgradeLevel < missle.MaxDamageLevel() && missle.Tower != nil) {
-    var Value = missle.UpgradeDamageLevelScheme[upgradeLevel]
+    var Value = missle.MissleTemplate.UpgradeDamageLevelScheme[upgradeLevel]
 
     if (Value.Cost <= missle.Tower.Golds) {
       missle.Tower.Golds -= Value.Cost
@@ -122,7 +129,7 @@ func (missle *Missle) UpgradeAttackSpeed() bool {
   upgradeLevel := missle.AttackSpeedLevel + 1
 
   if (upgradeLevel < missle.MaxAttackSpeedLevel() && missle.Tower != nil) {
-    var Value = missle.UpgradeAttackSpeedLevelScheme[upgradeLevel]
+    var Value = missle.MissleTemplate.UpgradeAttackSpeedLevelScheme[upgradeLevel]
 
     if (Value.Cost <= missle.Tower.Golds) {
       missle.Tower.Golds -= Value.Cost

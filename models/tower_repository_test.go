@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"os"
 	"testing"
 	"tower_troops/config"
@@ -11,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Suite struct {
+type TowerRepositorySuite struct {
   suite.Suite
 }
 
@@ -21,21 +20,25 @@ type DBSchemaVersion struct {
   Version int
 }
 
-func (s *Suite) SetupTest() {
-  fmt.Println("Setup test")
+var _DB *gorm.DB
+
+func (s *TowerRepositorySuite) SetupTest() {
   os.Setenv("app_env", "test")
   config.Load()
   migrations.DBMigrate()
-  config.C.DB.Begin()
+
+  _DB = config.C.DB
+  config.C.DB = config.C.DB.Begin()
 }
 
-func (s *Suite) TearDownTest() {
+func (s *TowerRepositorySuite) TearDownTest() {
   config.C.DB.Rollback()
-  config.C.DB.Migrator().DropTable(&DBSchemaVersion{})
+  config.C.DB = _DB
+  config.C.DB.Delete(&DBSchemaVersion{})
   os.Unsetenv("app_env")
 }
 
-func (s *Suite) TestCreateTower() {
+func (s *TowerRepositorySuite) TestCreateTower() {
   user := &User {
     Name: "Kevin",
     UserName: "duykhoa",
@@ -58,9 +61,5 @@ func (s *Suite) TestCreateTower() {
 }
 
 func TestSuite(t *testing.T) {
-  _, includeIntegrationTest := os.LookupEnv("RUN_INTEGRATION_TEST")
-
-  if (includeIntegrationTest) {
-    suite.Run(t, new(Suite))
-  }
+  suite.Run(t, new(TowerRepositorySuite))
 }
